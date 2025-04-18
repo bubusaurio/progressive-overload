@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+/* Base styles */
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Smooth scrolling for anchor links */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Container responsive adjustments */
+  .container {
+    width: 100%;
+    max-width: 1280px;
+  }
+  
+  /* Button hover effects */
+  button {
+    transition: all 0.2s ease;
+  }
+  
+  button:hover {
+    transform: translateY(-1px);
+  }
+  
+  /* Custom shadows */
+  .shadow-inner {
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  }
+  
+  .shadow-xl {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+  
+  /* Animation for feature cards */
+  .bg-white.p-8.rounded-xl {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .bg-white.p-8.rounded-xl:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Additional color adjustment for focus states */
+  button:focus, a:focus {
+    outline: 2px solid rgba(79, 70, 229, 0.5);
+    outline-offset: 2px;
+  }
+  
+  /* Media query for smaller devices */
+  @media (max-width: 768px) {
+    .text-4xl {
+      font-size: 2.25rem;
+    }
+    
+    .text-xl {
+      font-size: 1.15rem;
+    }
+    
+    .p-8 {
+      padding: 1.5rem;
+    }
+  }
