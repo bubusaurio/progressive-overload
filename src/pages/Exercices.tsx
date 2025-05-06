@@ -18,9 +18,9 @@ import {
   Dumbbell
 } from 'lucide-react';
 import { getFirestore, collection, getDocs, Timestamp, query, where } from 'firebase/firestore';
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-import { db } from "../firebase";
+import { auth, db } from "../firebase";
 
 // Types for our data structures
 interface Exercise {
@@ -247,7 +247,7 @@ const fetchMuscleGroupsWithProgressionHistory = async () => {
     for (const muscleGroup of muscleGroups) {
     for (const exercise of muscleGroup.exercises) {
       const history = await fetchProgressionHistory(muscleGroup.id, exercise.id, userId);
-      exercise.progressionHistory = history; // Update progression history dynamically
+      exercise.progressionHistory = history;
     }
   }
 
@@ -439,13 +439,31 @@ const Exercises = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const loadData = async () => {
-      const data = await fetchMuscleGroupsWithProgressionHistory();
-      setMuscleGroupsData(data);
-      setIsLoading(false);
+    let unsubscribe: () => void;
+  
+    const init = async () => {
+      unsubscribe = onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          try {
+            const data = await fetchMuscleGroupsWithProgressionHistory();
+            setMuscleGroupsData(data);
+          } catch (error) {
+            console.error('Error fetching muscle groups:', error);
+          } finally {
+            setIsLoading(false);
+          }
+        } else {
+          console.log('No user signed in');
+          setIsLoading(false);
+        }
+      });
     };
-
-    loadData();
+  
+    init();
+  
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, []);
 
   const toggleMuscleGroup = (muscleId: string) => {

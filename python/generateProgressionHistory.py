@@ -3,7 +3,7 @@ from firebase_admin import credentials, firestore
 from datetime import datetime
 
 # Initialize Firebase Admin
-cred = credentials.Certificate("python/overload-progress-firebase-adminsdk.json")  # Replace with your path
+cred = credentials.Certificate("python/overload-progress-firebase-adminsdk.json") 
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()
@@ -24,7 +24,7 @@ except ValueError as e:
 
 # Prepare progression data
 progression_data = {
-    "date": datetime.now(),
+    "date": datetime.now().strftime("%m/%d/%Y"),
     "weight": weight,
     "reps": reps,
     "sets": sets,
@@ -40,7 +40,7 @@ doc_ref = db.collection("muscleGroups") \
             .collection("exercises") \
             .document(exercise_id) \
             .collection("progressionHistory") \
-            .document()  # Auto-ID
+            .document() 
 
 doc_ref.set(progression_data)
 

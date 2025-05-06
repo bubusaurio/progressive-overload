@@ -59,7 +59,10 @@ const MinimalLandingPage = () => {
                 consistently build strength.
               </p>
               <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                <Link to="/login" className="px-6 py-3 bg-white text-indigo-600 rounded-lg font-medium hover:bg-gray-100 transition flex items-center justify-center">
+                <Link
+                  to="/login"
+                  className="px-6 py-3 bg-white text-indigo-600 rounded-lg font-medium hover:bg-gray-100 transition flex items-center justify-center"
+                >
                   Get Started <ArrowRight size={18} className="ml-2" />
                 </Link>
               </div>
@@ -69,20 +72,19 @@ const MinimalLandingPage = () => {
       </header>
 
       {/* Features Section */}
+      <section className="py-5 bg-gradient-to-r from-blue-500 to-indigo-600im text-white">
+      <div className="container mx-auto px-6 text-center">
+          <h2 className="text-3xl font-bold ">
+            Optimize Your Training
+          </h2>
+        </div>
+      </section>
       <section
         id="features"
         className="py-10 bg-[url('./img/fitness_bg.jpg')] bg-cover bg-center bg-no-repeat"
       >
         <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">
-              Optimize Your Training Progress
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              ProgressPro helps you apply progressive overload scientifically,
-              ensuring consistent strength and muscle gains.
-            </p>
-          </div>
+          <div className="text-center mb-16"></div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
             <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
@@ -97,29 +99,11 @@ const MinimalLandingPage = () => {
             </div>
 
             <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
-              <Smartphone size={40} className="text-indigo-600 mb-6" />
-              <h3 className="text-xl font-bold mb-3">Workout Templates</h3>
-              <p className="text-gray-600">
-                Create custom workout routines or choose from our library of
-                expert-designed templates for any fitness goal.
-              </p>
-            </div>
-
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
               <CheckCircle size={40} className="text-indigo-600 mb-6" />
               <h3 className="text-xl font-bold mb-3">Personal Records</h3>
               <p className="text-gray-600">
                 Celebrate your achievements with automatic PR tracking and
                 insightful progress visualizations.
-              </p>
-            </div>
-
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
-              <MessageCircle size={40} className="text-indigo-600 mb-6" />
-              <h3 className="text-xl font-bold mb-3">AI Workout Insights</h3>
-              <p className="text-gray-600">
-                Get personalized recommendations based on your progress history
-                and training patterns.
               </p>
             </div>
           </div>
@@ -132,11 +116,6 @@ const MinimalLandingPage = () => {
           <h2 className="text-3xl font-bold mb-6">
             Ready to Transform Your Training?
           </h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Join thousands of athletes and fitness enthusiasts who have taken
-            their training to the next level with ProgressPro.
-          </p>
-
           <Link
             to="/signup"
             className="px-8 py-4 bg-white text-indigo-600 rounded-lg font-medium hover:bg-gray-100 transition"
