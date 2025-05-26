@@ -11,7 +11,7 @@ import {
 import { FcGoogle } from "react-icons/fc";
 import { signInWithPopup } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, sendEmailVerification } from "firebase/auth";
 import { auth, googleProvider } from "../firebase";
 
 const Login = () => {
@@ -20,6 +20,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<any>(null); // To keep track of the user
+  const [loginError, setLoginError] = useState<string | null>(null);
   const navigate = useNavigate();
   const firebaseAuth = getAuth();
 
@@ -53,17 +54,27 @@ const Login = () => {
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
+    setLoginError(null);
     try {
       const userCredential = await signInWithEmailAndPassword(
         firebaseAuth,
         email,
         password
       );
+      // Check if email is verified
+      if (!userCredential.user.emailVerified) {
+        setLoginError("Please verify your email before logging in. Check your inbox for a verification email.");
+        // Optionally, resend verification email
+        await sendEmailVerification(userCredential.user);
+        await firebaseAuth.signOut();
+        setIsLoading(false);
+        return;
+      }
       console.log("Logged in user:", userCredential.user);
       navigate("/exercises");
     } catch (error: any) {
       console.error("Login error:", error.message);
-      alert("Login failed: " + error.message);
+      setLoginError("Login failed: " + error.message);
     } finally {
       setIsLoading(false);
     }
@@ -80,6 +91,12 @@ const Login = () => {
             Track your progress, achieve your goals
           </p>
         </div>
+
+        {loginError && (
+          <div className="p-2 mb-4 text-sm text-red-700 bg-red-100 rounded">
+            {loginError}
+          </div>
+        )}
 
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
