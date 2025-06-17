@@ -13,6 +13,12 @@ interface ProgressEntry {
   userId: string;
 }
 
+interface BpmEntry {
+  date: string;
+  bpm: number;
+  userId: string;
+}
+
 const chartConfigs = [
   {
     label: "Bench Press Progression",
@@ -33,6 +39,7 @@ const chartConfigs = [
 
 const Statistics = () => {
   const [progressData, setProgressData] = useState<Record<string, ProgressEntry[]>>({});
+  const [bpmData, setBpmData] = useState<BpmEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -56,6 +63,15 @@ const Statistics = () => {
         results[config.exercise] = data;
       }
       setProgressData(results);
+
+      // Fetch bpmHistory
+      const bpmRef = collection(db, "bpmHistory");
+      const bpmQ = query(bpmRef, where("userId", "==", userId));
+      const bpmSnap = await getDocs(bpmQ);
+      const bpmList: BpmEntry[] = bpmSnap.docs.map((doc) => doc.data() as BpmEntry);
+      bpmList.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      setBpmData(bpmList);
+
       setLoading(false);
     };
 
@@ -97,6 +113,24 @@ const Statistics = () => {
           )}
         </div>
       ))}
+      {/* BPM History Chart */}
+      <div>
+        <h1 className="text-2xl font-bold mb-4">BPM History</h1>
+        {bpmData.length === 0 ? (
+          <p>No BPM data available.</p>
+        ) : (
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={bpmData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis label={{ value: "BPM", angle: -90, position: "insideLeft" }} />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="bpm" stroke="#82ca9d" name="BPM" />
+            </LineChart>
+          </ResponsiveContainer>
+        )}
+      </div>
     </div>
   );
 };

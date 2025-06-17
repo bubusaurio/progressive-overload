@@ -7,6 +7,9 @@ import numpy as np
 import pandas as pd
 import joblib
 from werkzeug.utils import secure_filename
+import firebase_admin
+from firebase_admin import credentials, firestore
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -35,6 +38,13 @@ df_predict = pd.DataFrame(columns=columnas)
 
 # Inicializar MediaPipe
 mp_pose = mp.solutions.pose
+
+# Initialize Firebase Admin if not already initialized
+if not firebase_admin._apps:
+    cred = credentials.Certificate(os.path.join(os.path.dirname(__file__), 'overload-progress-firebase-adminsdk.json'))
+    firebase_admin.initialize_app(cred)
+
+db = firestore.client()
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -201,7 +211,7 @@ def upload_video():
     else:
         return jsonify({"error": "Formato no válido, solo se aceptan MP4 o WEBM"}), 400
 
-@app.route('/test_video', methods=['POST'])
+@app.route('/overhead-press', methods=['POST'])
 def test_video():
     data = request.get_json()
     filename = data.get('filename')
@@ -226,17 +236,20 @@ def test_video():
             "estado": "error"
         }), 500
 
-@app.route('/test_bicep_curl', methods=['GET'])
-def test_bicep_curl():
-    filename = 'bicep-curl.mp4'
-    ejercicio = 'bicep'
+@app.route('/bicep-curl', methods=['POST'])
+def bicep_curl():
+    data = request.get_json()
+    filename = data.get('filename')
+    ejercicio = data.get('ejercicio', 'bicep')
+    if not filename:
+        return jsonify({"error": "Se requiere el nombre del archivo (filename)"}), 400
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     if not os.path.exists(filepath):
         return jsonify({"error": "Archivo no encontrado"}), 404
     try:
         repeticiones = process_video(filepath, ejercicio)
         return jsonify({
-            "mensaje": "Video bicep-curl.mp4 procesado exitosamente (test)",
+            "mensaje": f"Video {filename} procesado exitosamente (bicep-curl)",
             "ejercicio": ejercicio,
             "nombre_archivo": filename,
             "repeticiones": repeticiones,
@@ -248,5 +261,38 @@ def test_bicep_curl():
             "estado": "error"
         }), 500
 
+@app.route('/save_bpm', methods=['POST'])
+def save_bpm():
+    data = request.get_json()
+    user_id = data.get('user_id')
+    bpm = data.get('bpm')
+    date = data.get('date') or datetime.now().strftime('%m/%d/%Y')
+    if not user_id or bpm is None:
+        return jsonify({'error': 'user_id and bpm are required'}), 400
+    try:
+        doc_ref = db.collection('bpmHistory').document()
+        doc_ref.set({
+            'userId': user_id,
+            'bpm': bpm,
+            'date': date
+        })
+        return jsonify({'message': 'BPM data saved successfully'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/update_selected_exercise', methods=['POST'])
+def update_selected_exercise():
+    data = request.get_json()
+    user_id = data.get('userId')
+    exercise = data.get('exercise')
+    if not user_id or not exercise:
+        return jsonify({'error': 'userId and exercise are required'}), 400
+    try:
+        doc_ref = db.collection('selectedExercise').document(user_id)
+        doc_ref.set({'exercise': exercise}, merge=True)
+        return jsonify({'message': 'Selected exercise updated successfully'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 if __name__ == '__main__':
-    app.run(debug=True, use_reloader=False, port=5050)
+    app.run(debug=True, use_reloader=False, host='0.0.0.0', port=5050)
