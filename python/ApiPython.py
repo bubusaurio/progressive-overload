@@ -12,7 +12,11 @@ from firebase_admin import credentials, firestore
 from datetime import datetime
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, resources={r"/*": {"origins": [
+    "https://progressive-overload-4yu0fbvdv-bubusaurios-projects.vercel.app",
+    "http://localhost:5173",
+    "https://192.168.68.119:5173"
+]}})
 
 # Configuración para guardar los videos
 UPLOAD_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), 'videos'))

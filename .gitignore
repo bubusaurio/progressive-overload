@@ -161,3 +161,5 @@ dist
 
 #Firebase settings account
 python/overload-progress-firebase-adminsdk.json
+192.168.68.119.pem
+192.168.68.119-key.pem
