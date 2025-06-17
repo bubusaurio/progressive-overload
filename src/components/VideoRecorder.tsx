@@ -14,6 +14,8 @@ const VideoRecorder: React.FC = () => {
   const [selectedExercise, setSelectedExercise] = useState<string | null>(null);
   const [weight, setWeight] = useState<string>("");
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   // Start camera and recording
   const startRecording = async () => {
     setResult(null);
@@ -63,7 +65,7 @@ const VideoRecorder: React.FC = () => {
     formData.append("video", file, file.name);
     try {
       // Upload the file first (if not already uploaded)
-      const uploadRes = await fetch("http://localhost:5050/upload", {
+      const uploadRes = await fetch(`${API_URL}/upload`, {
         method: "POST",
         body: formData,
       });
@@ -73,7 +75,7 @@ const VideoRecorder: React.FC = () => {
         setUploading(false);
         return;
       }
-      const testRes = await fetch("http://localhost:5050/overhead-press", {
+      const testRes = await fetch(`${API_URL}/overhead-press`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ filename: uploadData.filename, ejercicio: "tiron_pecho" }),
@@ -95,7 +97,7 @@ const VideoRecorder: React.FC = () => {
     formData.append("video", file, file.name);
     try {
       // Upload the file first (if not already uploaded)
-      const uploadRes = await fetch("http://localhost:5050/upload", {
+      const uploadRes = await fetch(`${API_URL}/upload`, {
         method: "POST",
         body: formData,
       });
@@ -105,7 +107,7 @@ const VideoRecorder: React.FC = () => {
         setUploading(false);
         return;
       }
-      const testRes = await fetch("http://localhost:5050/bicep-curl", {
+      const testRes = await fetch(`${API_URL}/bicep-curl`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ filename: uploadData.filename, ejercicio: "bicep" }),
