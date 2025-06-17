@@ -3,7 +3,6 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
-const API_URL = "http://localhost:5050/ejercicio"; // Adjust if your Flask API runs elsewhere
 
 const VideoRecorder: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -52,46 +51,6 @@ const VideoRecorder: React.FC = () => {
   const stopRecording = () => {
     mediaRecorderRef.current?.stop();
     setRecording(false);
-  };
-
-  // Upload video to Flask API (step 1)
-  const uploadVideo = async () => {
-    if (!videoBlob) return;
-    setUploading(true);
-    setResult(null);
-    const formData = new FormData();
-    const file = new File([videoBlob], "video.webm", { type: "video/webm" });
-    formData.append("video", file, file.name);
-
-    try {
-      // Step 1: Upload the file
-      const uploadRes = await fetch("http://localhost:5050/upload", {
-        method: "POST",
-        body: formData,
-      });
-      const uploadData = await uploadRes.json();
-      if (!uploadRes.ok) {
-        setResult({ error: uploadData.error || "Upload failed" });
-        setUploading(false);
-        return;
-      }
-      // Step 2: Process the uploaded file
-      const processRes = await fetch(API_URL, {
-        method: "POST",
-        body: new URLSearchParams({
-          ejercicio: "tiron_pecho",
-          filename: uploadData.filename,
-        }),
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      });
-      const processData = await processRes.json();
-      setResult(processData);
-    } catch (e) {
-      setResult({ error: "Upload or processing failed" });
-    }
-    setUploading(false);
   };
 
   // Send overhead

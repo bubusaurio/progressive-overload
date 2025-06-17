@@ -1,0 +1,9 @@
+flask
+flask-cors
+firebase-admin
+opencv-python
+mediapipe
+numpy
+pandas
+joblib
+Werkzeug
