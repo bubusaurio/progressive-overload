@@ -1,25 +1,23 @@
-import React, { FormEvent, useState, useEffect } from "react";
+import { FormEvent, useState, useEffect } from "react";
 import {
   Mail,
   Lock,
   Eye,
   EyeOff,
   ArrowRight,
-  Github,
-  Twitter,
 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { signInWithPopup } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, setPersistence, browserLocalPersistence } from "firebase/auth";
-import { auth, googleProvider } from "../firebase";
+import {googleProvider } from "../firebase";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [user, setUser] = useState<any>(null); // To keep track of the user
+  const [setUser] = useState<any>(null); // To keep track of the user
   const [loginError, setLoginError] = useState<string | null>(null);
   const navigate = useNavigate();
   const firebaseAuth = getAuth();

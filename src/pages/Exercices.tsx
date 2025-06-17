@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import chest from '../img/chest.png';
 import back from '../img/back.png';
@@ -12,12 +12,11 @@ import {
   X, 
   ChevronUp, 
   ChevronDown, 
-  Plus, 
   BarChart3,
   Calendar,
   Dumbbell
 } from 'lucide-react';
-import { getFirestore, collection, getDocs, Timestamp, query, where } from 'firebase/firestore';
+import {  collection, getDocs,  query, where } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import { auth, db } from "../firebase";
@@ -266,7 +265,7 @@ const ExerciseModal = ({
   onClose: () => void,
 }) => {
   const [activeTab, setActiveTab] = useState<'details' | 'progress'>('details');
-  const [newEntry, setNewEntry] = useState<Partial<ProgressEntry>>({
+  const [] = useState<Partial<ProgressEntry>>({
     date: new Date().toISOString().split('T')[0],
     weight: 0,
     reps: 0,
