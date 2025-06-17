@@ -1,14 +1,10 @@
 import { Link } from "react-router-dom";
-import styled from "styled-components";
-import Button from "../components/Button";
 
 import {
   ArrowRight,
   BarChart2,
   CheckCircle,
   Dumbbell,
-  MessageCircle,
-  Smartphone,
 } from "lucide-react";
 
 const MinimalLandingPage = () => {

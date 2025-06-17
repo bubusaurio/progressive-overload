@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from "react";
+import { useState, FormEvent } from "react";
 import {
   User,
   Lock,
@@ -6,11 +6,9 @@ import {
   Eye,
   EyeOff,
   ArrowRight,
-  Github,
-  Twitter,
 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { auth, googleProvider } from "../firebase";
 import {
   createUserWithEmailAndPassword,
