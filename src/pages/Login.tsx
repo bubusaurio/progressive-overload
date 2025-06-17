@@ -11,7 +11,7 @@ import {
 import { FcGoogle } from "react-icons/fc";
 import { signInWithPopup } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, sendEmailVerification } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, setPersistence, browserLocalPersistence } from "firebase/auth";
 import { auth, googleProvider } from "../firebase";
 
 const Login = () => {
@@ -56,20 +56,13 @@ const Login = () => {
     setIsLoading(true);
     setLoginError(null);
     try {
+      await setPersistence(firebaseAuth, browserLocalPersistence);
       const userCredential = await signInWithEmailAndPassword(
         firebaseAuth,
         email,
         password
       );
-      // Check if email is verified
-      if (!userCredential.user.emailVerified) {
-        setLoginError("Please verify your email before logging in. Check your inbox for a verification email.");
-        // Optionally, resend verification email
-        await sendEmailVerification(userCredential.user);
-        await firebaseAuth.signOut();
-        setIsLoading(false);
-        return;
-      }
+      // Removed email verification check
       console.log("Logged in user:", userCredential.user);
       navigate("/exercises");
     } catch (error: any) {

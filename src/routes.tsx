@@ -5,6 +5,8 @@ import Login from "./pages/Login"
 import Signup from "./pages/Signup";
 import Excersices from "./pages/Exercices";
 import Navbar from "./components/Navbar";
+import Statistics from "./pages/Statistics";
+import VideoPage from "./pages/VideoPage";
 
 export default function AppRoutes() {
   return (
@@ -16,6 +18,8 @@ export default function AppRoutes() {
         <Route path="/login" element={<Login />}/>
         <Route path="/signup" element={<Signup />}/>
         <Route path="/exercises" element={<Excersices />}/>
+        <Route path="/statistics" element={<Statistics />} />
+        <Route path="/video" element={<VideoPage />} />
       </Routes>
     </Router>
   );
